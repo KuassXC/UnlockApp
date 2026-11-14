@@ -1,14 +1,14 @@
 const mapping = {
-  Locket: ["Gold"],
+  '%E8%BD%A6%E7%A5%A8%E7%A5%A8': ['vip+watch_vip'],
+  'Locket': ['Gold']
 };
 
-const ua =
-  $request.headers["User-Agent"] || $request.headers["user-agent"] || "";
-let obj = JSON.parse($response.body);
+var ua = $request.headers["User-Agent"] || $request.headers["user-agent"];
+var obj = JSON.parse($response.body);
 
-obj.Attention = "Bản cấu hình cá nhân của KunSoCay. Vui lòng không chia sẻ!";
+obj.Attention = "Chúc mừng bạn! Vui lòng không bán hoặc chia sẻ cho người khác!";
 
-var kunsocay_sub = {
+var locket02 = {
   is_sandbox: false,
   ownership_type: "PURCHASED",
   billing_issues_detected_at: null,
@@ -18,36 +18,32 @@ var kunsocay_sub = {
   unsubscribe_detected_at: null,
   original_purchase_date: "2024-07-28T01:04:18Z",
   purchase_date: "2024-07-28T01:04:17Z",
-  store: "app_store",
+  store: "app_store"
 };
 
-var kunsocay_entitlement = {
+var KunSoCay = {
   grace_period_expires_date: null,
   purchase_date: "2024-07-28T01:04:17Z",
-  product_identifier: "com.kunsocay.premium.yearly",
-  expires_date: "2099-12-18T01:04:17Z",
+  product_identifier: "com.locket02.premium.yearly",
+  expires_date: "2099-12-18T01:04:17Z"
 };
 
-obj.subscriber = obj.subscriber || {};
-obj.subscriber.subscriptions = obj.subscriber.subscriptions || {};
-obj.subscriber.entitlements = obj.subscriber.entitlements || {};
-
-const match = Object.keys(mapping).find((e) => ua.includes(e));
+const match = Object.keys(mapping).find(e => ua.includes(e));
 
 if (match) {
-  let [entitlementKey, subKey] = mapping[match];
-
-  if (subKey) {
-    kunsocay_entitlement.product_identifier = subKey;
-    obj.subscriber.subscriptions[subKey] = kunsocay_sub;
+  let [e, s] = mapping[match];
+  
+  if (s) {
+    KunSoCay.product_identifier = s;
+    obj.subscriber.subscriptions[s] = locket02;
   } else {
-    obj.subscriber.subscriptions["com.kunsocay.premium.yearly"] = kunsocay_sub;
+    obj.subscriber.subscriptions["com.locket02.premium.yearly"] = locket02;
   }
 
-  obj.subscriber.entitlements[entitlementKey] = kunsocay_entitlement;
+  obj.subscriber.entitlements[e] = KunSoCay;
 } else {
-  obj.subscriber.subscriptions["com.kunsocay.premium.yearly"] = kunsocay_sub;
-  obj.subscriber.entitlements.pro = kunsocay_entitlement;
+  obj.subscriber.subscriptions["com.locket02.premium.yearly"] = locket02;
+  obj.subscriber.entitlements.pro = KunSoCay;
 }
 
 $done({ body: JSON.stringify(obj) });
